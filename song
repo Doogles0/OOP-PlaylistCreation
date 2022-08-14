@@ -1,0 +1,47 @@
+public class song {
+  //song name
+  private String name;
+  //
+  private String artist;
+
+  //genre of song
+  private String genre;
+
+  //duration of the song (given in seconds)
+  private String duration;
+  //year song was released
+
+  private String year;
+
+  //constructor method
+  public song(String s, String a, String dur, String y, String gen) {  //constructor for object song
+    this.name = s; //name
+    this.artist = a; //artist
+    this.genre=gen; //genre
+    this.year=y; //year
+    this.duration=dur; //duration
+
+  }
+  public String getG() { //returns genre of object song
+    return this.genre;
+  }
+  public String getA() { //returns artist of object song
+    return this.artist;
+  }
+  public int getD() { //get duration in minutes
+    String[] durSplit = duration.split(":"); //splits around the colon,
+    String minutes = durSplit[0]; //minutes is the first element
+    String seconds = durSplit[1]; //seconds is the second
+    int sec = Integer.parseInt(seconds); //turns seconds into int type
+    int min = Integer.parseInt(minutes); //tracks minutes based on original minute type
+    return (min);
+  }
+  public String getS() { //returns song name of object song
+    return this.name;
+  }
+  public String getY() { // returns year of object song
+    return this.year;
+  }
+
+
+}
