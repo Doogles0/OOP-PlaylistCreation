@@ -1,0 +1,146 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.*;
+public class PlaylistMain {
+//Will not repeat any songs at all
+
+  public static void main(String[] args) {
+    Scanner input = new Scanner(System.in);
+    // TODO Auto-generated method stub
+    ArrayList<song>playlist = new ArrayList<song>();
+    String ind_line = "";
+    try {
+      FileReader file = new FileReader("data.txt");
+      BufferedReader buffer = new BufferedReader(file);
+      for (int x = 0; x < 31; x++) {// read through it the length of songs in database times
+        ind_line = buffer.readLine();
+
+        String [] arr = ind_line.split(",");
+
+        song SONG = new song(arr[0], arr[1], arr[2], arr[3], arr[4]);
+        playlist.add(SONG);
+        }
+    } catch (IOException e) {
+    e.printStackTrace();
+    }
+
+
+    // sort by what user wants, creating a new array list each run through
+    int choice = 0;
+    int choice1 = 0;
+    int dur = 0;
+    boolean cont = true;
+    String wanted = null;
+    while(cont == true) {
+      System.out.println("in put what to sort by. genre = 1. duration = 2, year = 3, artist = 4.print list = 5, repeat once = 6");
+      choice = getChoice(input);
+      //put in a while loop? allowing for constant addition of
+      if (choice == 1) {
+        wanted = getWanted(input); // sort by wanted input
+        sortG(playlist, wanted); //sort by genre
+      }
+      if (choice == 2) {
+        dur = getLenDur(input); //get length of duration wanted
+        sortD(playlist, dur); //sort by the length or duration wanted
+      }
+      if (choice == 3) {
+        wanted = getWanted(input); //get wanted input
+        sortY(playlist, wanted); //sort by year made
+      }
+      if (choice == 4) {
+        wanted = getWanted(input); //get wanted input
+        sortA(playlist, wanted); //sort by artist with given inputs
+      }
+      if (choice ==5) { //prints the whole array
+        for (int i = 0; playlist.size()>i; i++) { //loops through array
+        System.out.println((playlist.get(i)).getS());  //prints the song names
+      }
+      }
+      if (choice == 6) {
+        repeat(playlist);
+      }
+
+      System.out.println("would you like to continue? 0 = no 1 =  yes"); //prompt for continuation
+      cont = getCont(input); //continue or not
+     }
+    for (int i = 0; playlist.size()>i; i++) {// loops through list
+      System.out.println((playlist.get(i)).getS()); //prints song names
+    }
+    }
+
+    public static void sortD(ArrayList<song> playlist, int wanted) { //sorts duration
+      int currentDur = 0; //tracks current duration of everything
+      int songDur = 0;//tracks song duration
+      while ((currentDur>wanted || currentDur<wanted-5)) { //while current dur is more then wanted, or less than wanted (mins) -5 (as the playlist can be -5 mins)
+        for (int i = 0; playlist.size()-1>i; i++) { //get the current duration
+          currentDur+=((playlist.get(i)).getD());
+          if(currentDur>wanted) { //if the current duration is equal to that
+            currentDur-= (playlist.get(0).getD());
+            playlist.remove(0); //removes song at index from playlist
+          }
+        }
+
+      }
+
+    }
+
+    public static void sortY(ArrayList<song> playlist, String wanted) { //sorts year
+      for (int i=playlist.size()-1; i>0; i--) { // go backwards through the list, remove any anwanted element
+        if(!((playlist.get(i)).getY()).equals(wanted)) { //goes through array, if the thing being scanned is not equal to wanted
+          playlist.remove(i); //remove it
+        }
+      }
+    }
+    public static void sortA(ArrayList<song> playlist, String wanted) { //sorts by artist
+      for (int i=playlist.size()-1; i>0; i--) { // go backwards through the list, remove any anwanted element
+        if(!((playlist.get(i)).getA()).equals(wanted)) { //scans array, if string is not equal to that of the wanted
+          playlist.remove(i); //remove it
+        }
+      }
+    }
+    public static void sortG(ArrayList<song> playlist, String wanted) { //sorts genre
+      for (int i=playlist.size()-1; i>0; i--) { // go backwards through the list, remove any anwanted element
+        if(!((playlist.get(i)).getG()).equals(wanted)) { //if the string being scanned is not equal to that wanted
+          playlist.remove(i); //remove
+        }
+      }
+    }
+    public static String getWanted(Scanner input) { //gets wanted (string) to sort
+      String wanted = "";//states wanted
+      System.out.println("input wanted");
+      input.nextLine(); //fixes scanner skipping line
+      wanted+=input.nextLine(); //reads lines
+      return wanted;
+
+    }
+    public static int getChoice(Scanner input) { //gets choice of what user wants to sort by
+      int choice = input.nextInt(); //states and takes int choice
+      return choice;
+
+    }
+    public static boolean getCont(Scanner input) { // gets value to proceed or not
+      int choice = 0;
+      choice = input.nextInt();
+      if (choice == 0) {
+        return false; //boolean value, true = continue
+      }
+      else {
+        return true;
+      }
+
+    }
+    public static int getLenDur(Scanner input) { // gets length of duration wanted
+      System.out.println("what duration do you want (input minutes wanted?");
+      int dur = input.nextInt(); //input of wanted time constraint (minutes)
+      return dur;
+    }
+    public static void repeat(ArrayList<song> playlist) { //duplicates playlist at the end of playlist.
+      for (int i = playlist.size()-1; i>0; i--) { //loops through array
+        playlist.add(playlist.get(i));  //Adds song to end of list
+      }
+    }
+}
